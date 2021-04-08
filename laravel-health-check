@@ -47,13 +47,25 @@ $app = require_once HC_LARAVEL_DIR . '/bootstrap/app.php';
 $classMap = $composer->getClassMap();
 
 if (isset($classMap['PHPUnit\Framework\TestCase'])) {
-    echo "Error: require-dev packages was detected in production mode.\n";
+    fwrite(STDERR, "Error: require-dev packages was detected in production mode.\n");
     exit(1);
 }
 
 unset($classMap);
 
-require_once __DIR__ . '/vendor/autoload.php';
+foreach ([__DIR__ . '/../../autoload.php', __DIR__ . '/vendor/autoload.php'] as $file) {
+    if (file_exists($file)) {
+        define('HC_COMPOSER_AUTOLOAD', $file);
+        break;
+    }
+}
+
+if (!defined('HC_COMPOSER_AUTOLOAD')) {
+    fwrite(STDERR, "You need to set up the project dependencies using Composer.\n");
+    exit(1);
+}
+
+require_once HC_COMPOSER_AUTOLOAD;
 
 $phpUnit = new PHPUnit\TextUI\Command;
 
