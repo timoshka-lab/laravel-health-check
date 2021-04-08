@@ -1,16 +1,19 @@
 {
-    "name": "timoshka-lab/laravel-health-check",
-    "description": "The command line interface to verify laravel configuration in production mode.",
-    "license": "MIT",
-    "require": {
-        "php": "^7.3|^8.0",
-        "phpunit/phpunit": "^8.5.8|^9.3.3"
-    },
-    "autoload": {
-        "psr-4": {
-            "HealthCheckTests\\": "tests/"
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+  "name": "timoshka-lab/laravel-health-check",
+  "description": "The command line interface to verify laravel configuration in production mode.",
+  "license": "MIT",
+  "require": {
+    "php": "^7.3|^8.0",
+    "phpunit/phpunit": "^8.5.8|^9.3.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "HealthCheckTests\\": "tests/"
+    }
+  },
+  "bin": [
+    "laravel-health-check"
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
