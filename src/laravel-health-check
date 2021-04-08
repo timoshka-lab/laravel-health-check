@@ -1,0 +1,46 @@
+#!/usr/bin/env php
+<?php
+$params = getopt('d:h', [
+    'help',
+    'without-database',
+    'without-mail',
+    'without-queue',
+]);
+
+$help = function () {
+    echo "\033[33mDescription:\033[0m\n";
+    echo "  The command line interface to verify laravel configuration in production mode.\n";
+    echo "\n";
+    echo "\033[33mUsage:\033[0m\n";
+    echo "  laravel-health-check [options] -d <laravel-directory-path>\n";
+    echo "\n";
+    echo "\033[33mOptions:\033[0m\n";
+    echo "  -h|--help            Prints this usage information\n";
+    echo "  --without-database   Avoid to run database configuration tests\n";
+    echo "  --without-mail       Avoid to run email configuration tests\n";
+    echo "  --without-queue      Avoid to run job queue configuration tests\n";
+    echo "\n";
+};
+
+if (isset($params['h']) || isset($params['help'])) {
+    $help();
+    exit(0);
+}
+
+if (!isset($params['d'])) {
+    $help();
+    exit(1);
+}
+
+define('HC_LARAVEL_DIR', realpath(rtrim($params['d'], '/')));
+define('HC_TEST_WITHOUT_DATABASE', isset($params['without-database']));
+define('HC_TEST_WITHOUT_MAIL', isset($params['without-mail']));
+define('HC_TEST_WITHOUT_QUEUE', isset($params['without-queue']));
+
+unset($help, $params);
+
+require __DIR__ . '/bootstrap.php';
+
+$phpUnit = new PHPUnit\TextUI\Command;
+
+$phpUnit->run([__FILE__, '--colors=auto', '--dont-report-useless-tests', __DIR__ . '/tests']);
